@@ -67,7 +67,7 @@ st.markdown("""
 
     /* ====== SIDEBAR ====== */
     section[data-testid="stSidebar"] {
-        background-color: #ffffff !important;
+        background-color: #000000 !important;
     }
 
     /* ====== STATUS BOXES ====== */
@@ -385,6 +385,7 @@ elif st.session_state["page"] == "history":
         st.dataframe(df_hist)
     if st.button("Kembali"):
         go_to("form")
+
 
 
 
