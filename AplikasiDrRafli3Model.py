@@ -55,7 +55,7 @@ st.markdown("""
         border-radius: 6px !important;
         border: 1px solid #ccc !important;
         padding: 8px !important;
-        background-color: #f9f9f9 !important;
+        background-color: #e4e4e4 !important;
         color: #000000 !important;
     }
 
@@ -385,3 +385,4 @@ elif st.session_state["page"] == "history":
         st.dataframe(df_hist)
     if st.button("Kembali"):
         go_to("form")
+
