@@ -12,21 +12,31 @@ from collections import Counter
 st.set_page_config(page_title="Halo Sahabat!", layout="centered")
 
 # =====================================================
-# 🎨 Custom CSS Styling
+# 🎨 Custom CSS Styling (with fade-in animation)
 # =====================================================
 st.markdown("""
     <style>
     /* ====== GLOBAL BACKGROUND ====== */
     .stApp {
-        background-color: #ffffff !important;  /* Putih */
-        color: #808080 !important;              /* Teks utama hitam */
+        background-color: #ffffff !important;
+        color: #808080 !important;
         font-family: 'Helvetica', sans-serif;
     }
 
-    /* ====== BUTTON STYLE (navy blue dengan teks putih) ====== */
+    /* ====== FADE-IN ANIMATION ====== */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+        animation: fadeIn 1.2s ease-in-out;
+    }
+
+    /* ====== BUTTON STYLE ====== */
     div.stButton > button {
-        background-color: #001f3f !important;   /* Navy */
-        color: #ffffff !important;              /* Putih */
+        background-color: #001f3f !important;
+        color: #ffffff !important;
         border: none !important;
         border-radius: 8px !important;
         padding: 0.6em 1.2em !important;
@@ -35,7 +45,7 @@ st.markdown("""
     }
 
     div.stButton > button:hover {
-        background-color: #003366 !important;   /* Biru lebih terang saat hover */
+        background-color: #003366 !important;
         transform: translateY(-2px);
     }
 
@@ -57,7 +67,7 @@ st.markdown("""
 
     /* ====== SIDEBAR ====== */
     section[data-testid="stSidebar"] {
-        background-color: #ffffff !important; /* Putih */
+        background-color: #ffffff !important;
     }
 
     /* ====== STATUS BOXES ====== */
@@ -83,8 +93,29 @@ st.markdown("""
         border: 1px solid #e0e0e0 !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+
+    /* ====== LAYOUT CENTERING ====== */
+    .centered-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 85vh;
+        text-align: center;
+    }
+
+    .bottom-caption {
+        position: fixed;
+        bottom: 10px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #555;
+    }
     </style>
 """, unsafe_allow_html=True)
+
 
 # =====================================================
 # 1️⃣ Load Model dan Metadata
@@ -122,14 +153,10 @@ def load_models_and_metadata():
 
     return models, metadatas
 
+
 models, metadatas = load_models_and_metadata()
 
-# Pilih metadata acuan
-ref_meta = None
-if len(metadatas) > 0:
-    ref_meta = list(metadatas.values())[0]
-
-# Default fallback
+ref_meta = list(metadatas.values())[0] if len(metadatas) > 0 else None
 FEATURE_ORDER = ref_meta["FEATURE_ORDER"] if ref_meta else [
     'Jenis Kelamin',
     'Usia saat ini (Kategorik)',
@@ -142,8 +169,8 @@ FEATURE_ORDER = ref_meta["FEATURE_ORDER"] if ref_meta else [
     'OAE Sesuai Protokol'
 ]
 MANUAL_ENCODING = ref_meta["MANUAL_ENCODING"] if ref_meta else {}
-
 LABELS = {0: "Penanganan tidak terkontrol", 1: "Penanganan terkontrol"}
+
 
 # =====================================================
 # 2️⃣ Helper Functions
@@ -154,7 +181,9 @@ def normalize_manual_encoding(manual_encoding):
         norm[col] = {str(k).strip(): v for k, v in mapping.items()}
     return norm
 
+
 MANUAL_ENCODING = normalize_manual_encoding(MANUAL_ENCODING)
+
 
 def encode_input(data_dict, metadata):
     encoded = {}
@@ -191,7 +220,9 @@ if "history" not in st.session_state:
 if "page" not in st.session_state:
     st.session_state["page"] = "home"
 
-def go_to(page): st.session_state["page"] = page
+
+def go_to(page):
+    st.session_state["page"] = page
 
 
 # =====================================================
@@ -203,19 +234,42 @@ PAGES = ["home", "auth_choice", "register", "login", "form", "history"]
 # 5️⃣ UI Halaman
 # =====================================================
 if st.session_state["page"] == "home":
-    st.title("Halo Sahabat!")
-    st.markdown("### Selamat Datang di Aplikasi SeizureDetect.AI!")
-    if st.button("Mulai Aplikasi"):
-        go_to("auth_choice")
+    st.markdown("""
+        <div class="centered-container fade-in">
+            <h1>Halo Sahabat!</h1>
+            <h2>Selamat Datang di Aplikasi SeizureDetect.AI!</h2>
+            <p><i>Experimental App untuk prediksi penanganan kejang</i></p>
+        </div>
+    """, unsafe_allow_html=True)
 
+    # Center tombol
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("Mulai Aplikasi"):
+            go_to("auth_choice")
+
+    # Caption paling bawah
+    st.markdown("""
+        <div class="bottom-caption fade-in">
+            Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | 
+            Ensemble Epilepsy Prediction Model (XGB + DT + RF)
+        </div>
+    """, unsafe_allow_html=True)
+
+# =====================================================
+# 🔐 AUTH, FORM, HISTORY tetap sama seperti sebelumnya
+# =====================================================
 elif st.session_state["page"] == "auth_choice":
     st.header("Apakah Anda sudah punya akun?")
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("Login"): go_to("login")
+        if st.button("Login"):
+            go_to("login")
     with col2:
-        if st.button("Register"): go_to("register")
-    if st.button("Kembali ke Beranda"): go_to("home")
+        if st.button("Register"):
+            go_to("register")
+    if st.button("Kembali ke Beranda"):
+        go_to("home")
 
 elif st.session_state["page"] == "register":
     st.header("Registrasi Akun Baru")
@@ -241,7 +295,8 @@ elif st.session_state["page"] == "register":
             }
             st.success("Registrasi berhasil! Silakan login.")
             go_to("login")
-    if st.button("Kembali"): go_to("auth_choice")
+    if st.button("Kembali"):
+        go_to("auth_choice")
 
 elif st.session_state["page"] == "login":
     st.header("Login")
@@ -259,7 +314,8 @@ elif st.session_state["page"] == "login":
             go_to("form")
         else:
             st.error("Username atau password salah.")
-    if st.button("Kembali"): go_to("auth_choice")
+    if st.button("Kembali"):
+        go_to("auth_choice")
 
 elif st.session_state["page"] == "form":
     if not st.session_state["logged_in"]:
@@ -286,7 +342,8 @@ elif st.session_state["page"] == "form":
                 st.error("Tidak ada model atau metadata ditemukan.")
             else:
                 encoded = encode_input(input_data, ref_meta)
-                X_input = pd.DataFrame([[encoded.get(c, 0) for c in FEATURE_ORDER]], columns=FEATURE_ORDER)
+                X_input = pd.DataFrame([[encoded.get(c, 0) for c in FEATURE_ORDER]],
+                                       columns=FEATURE_ORDER)
 
                 st.subheader("📊 Hasil Prediksi Tiap Model")
                 preds = {}
@@ -328,26 +385,3 @@ elif st.session_state["page"] == "history":
         st.dataframe(df_hist)
     if st.button("Kembali"):
         go_to("form")
-
-st.markdown("---")
-st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
