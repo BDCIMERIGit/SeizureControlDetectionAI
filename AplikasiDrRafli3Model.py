@@ -25,8 +25,8 @@ st.markdown("""
 
     /* ====== BUTTON STYLE (default navy blue) ====== */
     div.stButton > button {
-        background-color: #000000;  /* Black - Navy blue */
-        color: white;
+        background-color: #ffffff;  /* Black - Navy blue */
+        color: black;
         border: none;
         border-radius: 8px;
         padding: 0.6em 1.2em;
@@ -343,6 +343,7 @@ elif st.session_state["page"] == "history":
 
 st.markdown("---")
 st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
