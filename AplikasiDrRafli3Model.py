@@ -23,7 +23,7 @@ st.markdown("""
         font-family: 'Helvetica', sans-serif;
     }
 
-    /* ====== BUTTON STYLE ====== */
+    /* ====== BUTTON STYLE (default navy blue) ====== */
     div.stButton > button {
         background-color: #001f3f;  /* Navy blue */
         color: white;
@@ -39,6 +39,19 @@ st.markdown("""
         transform: translateY(-2px);
     }
 
+    /* ====== SPESIAL: Tombol "Masuk" jadi putih ====== */
+    div.stButton > button:has(span:contains("Masuk")) {
+        background-color: #ffffff !important;
+        color: #001f3f !important;
+        border: 2px solid #001f3f !important;
+    }
+
+    div.stButton > button:has(span:contains("Masuk")):hover {
+        background-color: #001f3f !important;
+        color: #ffffff !important;
+        transform: translateY(-2px);
+    }
+
     /* ====== FORM FIELD ====== */
     .stTextInput > div > div > input,
     .stSelectbox > div > div > select {
@@ -50,16 +63,16 @@ st.markdown("""
 
     /* ====== HEADER & TITLES ====== */
     h1, h2, h3, h4 {
-        color: #001f3f !important;  /* Navy */
+        color: #001f3f !important;
         font-weight: 700 !important;
     }
 
     /* ====== SIDEBAR ====== */
     section[data-testid="stSidebar"] {
-        background-color: #f0f4fa !important;  /* biru muda */
+        background-color: #f0f4fa !important;
     }
 
-    /* ====== SUCCESS / INFO / WARNING BOXES ====== */
+    /* ====== STATUS BOXES ====== */
     .stSuccess {
         background-color: #e6f7ff !important;
         border-left: 5px solid #001f3f !important;
@@ -76,7 +89,7 @@ st.markdown("""
         color: #660000 !important;
     }
 
-    /* ====== DATAFRAME ====== */
+    /* ====== DATAFRAME STYLE ====== */
     .stDataFrame {
         border-radius: 10px !important;
         border: 1px solid #e0e0e0 !important;
@@ -330,3 +343,4 @@ elif st.session_state["page"] == "history":
 
 st.markdown("---")
 st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
