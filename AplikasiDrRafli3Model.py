@@ -19,7 +19,7 @@ st.markdown("""
     /* ====== GLOBAL BACKGROUND ====== */
     .stApp {
         background-color: #ffffff !important;  /* Putih */
-        color: #000000;
+        color: #094787;
         font-family: 'Helvetica', sans-serif;
     }
 
@@ -343,6 +343,7 @@ elif st.session_state["page"] == "history":
 
 st.markdown("---")
 st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
