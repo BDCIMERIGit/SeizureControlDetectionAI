@@ -233,6 +233,35 @@ PAGES = ["home", "auth_choice", "register", "login", "form", "history"]
 # =====================================================
 # 5️⃣ UI Halaman
 # =====================================================
+# =====================================================
+# 🎨 CUSTOM CSS
+# =====================================================
+st.markdown("""
+    <style>
+    /* Ubah warna teks label input jadi hitam */
+    label {
+        color: black !important;
+        font-weight: 600 !important;
+    }
+
+    /* Ubah tombol submit (Masuk) jadi teks putih dan latar biru tua */
+    div.stButton > button {
+        background-color: #001F3F !important;  /* Biru tua elegan */
+        color: white !important;
+        font-weight: bold !important;
+        border-radius: 8px !important;
+        padding: 0.5em 1.5em !important;
+        border: none !important;
+    }
+
+    /* Efek hover tombol */
+    div.stButton > button:hover {
+        background-color: #004080 !important;
+        color: white !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 if st.session_state["page"] == "home":
     st.markdown("""
         <div class="centered-container fade-in">
@@ -385,6 +414,7 @@ elif st.session_state["page"] == "history":
         st.dataframe(df_hist)
     if st.button("Kembali"):
         go_to("form")
+
 
 
 
