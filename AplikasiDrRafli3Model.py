@@ -206,7 +206,7 @@ def encode_input(data_dict, metadata):
 if "users" not in st.session_state:
     # Default profile requested by user
     st.session_state["users"] = {
-        "drachmad": {
+        "drrafli": {
             "name": "dr. Achmad Rafli, Sp.A(K)",
             "instansi": "RS Cipto Mangunkusumo",
             "email": "achmad.rafli@rs-cipto.go.id",
@@ -500,3 +500,4 @@ elif st.session_state["page"] == "history":
 # Footer caption
 st.markdown("---")
 st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
