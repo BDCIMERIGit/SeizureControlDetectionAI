@@ -18,7 +18,7 @@ st.markdown("""
     <style>
     /* ====== GLOBAL BACKGROUND ====== */
     .stApp {
-        background-color: #ffffff !important;
+        background-color: #e4e4e4 !important;
         color: #000000 !important;
         font-family: 'Helvetica', sans-serif;
     }
@@ -55,7 +55,7 @@ st.markdown("""
         border-radius: 6px !important;
         border: 1px solid #ccc !important;
         padding: 8px !important;
-        background-color: #e4e4e4 !important;
+        background-color: #ffffff !important;
         color: #000000 !important;
     }
 
@@ -385,5 +385,6 @@ elif st.session_state["page"] == "history":
         st.dataframe(df_hist)
     if st.button("Kembali"):
         go_to("form")
+
 
 
