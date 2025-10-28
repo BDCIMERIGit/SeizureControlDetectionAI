@@ -12,6 +12,80 @@ from collections import Counter
 st.set_page_config(page_title="🧠 SeizureDetect.AI", layout="centered")
 
 # =====================================================
+# 🎨 Custom CSS Styling
+# =====================================================
+st.markdown("""
+    <style>
+    /* ====== GLOBAL BACKGROUND ====== */
+    .stApp {
+        background-color: #ffffff !important;  /* Putih */
+        color: #000000;
+        font-family: 'Helvetica', sans-serif;
+    }
+
+    /* ====== BUTTON STYLE ====== */
+    div.stButton > button {
+        background-color: #001f3f;  /* Navy blue */
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6em 1.2em;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    div.stButton > button:hover {
+        background-color: #003366;  /* Warna navy lebih terang saat hover */
+        transform: translateY(-2px);
+    }
+
+    /* ====== FORM FIELD ====== */
+    .stTextInput > div > div > input,
+    .stSelectbox > div > div > select {
+        border-radius: 6px !important;
+        border: 1px solid #ccc !important;
+        padding: 8px !important;
+        background-color: #f9f9f9 !important;
+    }
+
+    /* ====== HEADER & TITLES ====== */
+    h1, h2, h3, h4 {
+        color: #001f3f !important;  /* Navy */
+        font-weight: 700 !important;
+    }
+
+    /* ====== SIDEBAR ====== */
+    section[data-testid="stSidebar"] {
+        background-color: #f0f4fa !important;  /* biru muda */
+    }
+
+    /* ====== SUCCESS / INFO / WARNING BOXES ====== */
+    .stSuccess {
+        background-color: #e6f7ff !important;
+        border-left: 5px solid #001f3f !important;
+        color: #001f3f !important;
+    }
+    .stWarning {
+        background-color: #fff8e6 !important;
+        border-left: 5px solid #ffcc00 !important;
+        color: #7a6000 !important;
+    }
+    .stError {
+        background-color: #ffe6e6 !important;
+        border-left: 5px solid #cc0000 !important;
+        color: #660000 !important;
+    }
+
+    /* ====== DATAFRAME ====== */
+    .stDataFrame {
+        border-radius: 10px !important;
+        border: 1px solid #e0e0e0 !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# =====================================================
 # 1️⃣ Load Model dan Metadata
 # =====================================================
 @st.cache_resource
@@ -70,7 +144,6 @@ MANUAL_ENCODING = ref_meta["MANUAL_ENCODING"] if ref_meta else {}
 
 LABELS = {0: "Penanganan tidak terkontrol", 1: "Penanganan terkontrol"}
 
-
 # =====================================================
 # 2️⃣ Helper Functions
 # =====================================================
@@ -124,7 +197,6 @@ def go_to(page): st.session_state["page"] = page
 # 4️⃣ Navigasi Halaman
 # =====================================================
 PAGES = ["home", "auth_choice", "register", "login", "form", "history"]
-
 
 # =====================================================
 # 5️⃣ UI Halaman
@@ -215,7 +287,6 @@ elif st.session_state["page"] == "form":
                 encoded = encode_input(input_data, ref_meta)
                 X_input = pd.DataFrame([[encoded.get(c, 0) for c in FEATURE_ORDER]], columns=FEATURE_ORDER)
 
-                # Prediksi dari tiap model
                 st.subheader("📊 Hasil Prediksi Tiap Model")
                 preds = {}
                 for name, model in models.items():
@@ -226,16 +297,14 @@ elif st.session_state["page"] == "form":
                     except Exception as e:
                         st.warning(f"Gagal prediksi dengan {name}: {e}")
 
-                # Majority voting
                 if preds:
                     votes = list(preds.values())
                     vote_result = Counter(votes).most_common(1)[0][0]
                     st.markdown("---")
                     st.subheader("🗳️ Hasil Majority Voting:")
-                    st.success(LABELS[vote_result] if vote_result == 1 else LABELS[vote_result])
+                    st.success(LABELS[vote_result])
                     st.markdown("---")
 
-                    # Simpan ke history
                     st.session_state["history"].append({
                         **input_data,
                         **{f"{k}_pred": LABELS[v] for k, v in preds.items()},
