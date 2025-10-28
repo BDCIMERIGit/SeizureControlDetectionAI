@@ -18,37 +18,24 @@ st.markdown("""
     <style>
     /* ====== GLOBAL BACKGROUND ====== */
     .stApp {
-        background-color: #fffff !important;  /* Putih */
-        color: #ffffff;
+        background-color: #ffffff !important;  /* Putih */
+        color: #000000 !important;              /* Teks utama hitam */
         font-family: 'Helvetica', sans-serif;
     }
 
-    /* ====== BUTTON STYLE (default navy blue) ====== */
+    /* ====== BUTTON STYLE (navy blue dengan teks putih) ====== */
     div.stButton > button {
-        background-color: #094787;  /* Blue */
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.6em 1.2em;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        background-color: #001f3f !important;   /* Navy */
+        color: #ffffff !important;              /* Putih */
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.6em 1.2em !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
     }
 
     div.stButton > button:hover {
-        background-color: #003366;  /* Warna navy lebih terang saat hover */
-        transform: translateY(-2px);
-    }
-
-    /* ====== SPESIAL: Tombol "Masuk" jadi putih ====== */
-    div.stButton > button:has(span:contains("Masuk")) {
-        background-color: #ffffff !important;
-        color: #001f3f !important;
-        border: 2px solid #001f3f !important;
-    }
-
-    div.stButton > button:has(span:contains("Masuk")):hover {
-        background-color: #001f3f !important;
-        color: #ffffff !important;
+        background-color: #003366 !important;   /* Biru lebih terang saat hover */
         transform: translateY(-2px);
     }
 
@@ -59,6 +46,7 @@ st.markdown("""
         border: 1px solid #ccc !important;
         padding: 8px !important;
         background-color: #f9f9f9 !important;
+        color: #000000 !important;
     }
 
     /* ====== HEADER & TITLES ====== */
@@ -69,7 +57,7 @@ st.markdown("""
 
     /* ====== SIDEBAR ====== */
     section[data-testid="stSidebar"] {
-        background-color: #fffff !important;
+        background-color: #ffffff !important; /* Putih */
     }
 
     /* ====== STATUS BOXES ====== */
@@ -343,6 +331,7 @@ elif st.session_state["page"] == "history":
 
 st.markdown("---")
 st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
