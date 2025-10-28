@@ -9,7 +9,7 @@ import pandas as pd
 import os
 from collections import Counter
 
-st.set_page_config(page_title="🧠 Halo! 🧠", layout="centered")
+st.set_page_config(page_title="Halo Sahabat!", layout="centered")
 
 # =====================================================
 # 🎨 Custom CSS Styling
@@ -203,7 +203,7 @@ PAGES = ["home", "auth_choice", "register", "login", "form", "history"]
 # 5️⃣ UI Halaman
 # =====================================================
 if st.session_state["page"] == "home":
-    st.title("🧠 Halo! 🧠")
+    st.title("Halo Sahabat!")
     st.markdown("### Selamat Datang di Aplikasi SeizureDetect.AI!")
     if st.button("Mulai Aplikasi"):
         go_to("auth_choice")
@@ -331,6 +331,7 @@ elif st.session_state["page"] == "history":
 
 st.markdown("---")
 st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
