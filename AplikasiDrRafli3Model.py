@@ -1295,6 +1295,13 @@ div[data-testid="stFormSubmitButton"] > button:hover {
         color: #001f3f !important;
     }
 
+    div[data-testid="stNotification"][aria-label="Success"] {
+        background-color: #D0E7FF !important;
+        border-left: 5px solid #001f3f !important;
+        color: #001f3f !important;
+    }
+
+
     
     .stWarning {
         background-color: #fff8e6 !important; /* keknya ini */
@@ -1875,6 +1882,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
