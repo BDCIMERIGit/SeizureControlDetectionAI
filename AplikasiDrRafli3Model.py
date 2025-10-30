@@ -1282,6 +1282,20 @@ div[data-testid="stFormSubmitButton"] > button:hover {
         border-left: 5px solid #001f3f !important;
         color: #001f3f !important;
     }
+
+    /* ====== CUSTOM ALERT (untuk st.success) ====== */
+    div[data-testid="stNotification"] {
+        background-color: #D0E7FF !important;   /* biru muda */
+        border-left: 5px solid #001f3f !important;
+        color: #001f3f !important;
+    }
+
+    /* (opsional) agar teks di dalamnya tetap kontras */
+    div[data-testid="stNotification"] p {
+        color: #001f3f !important;
+    }
+
+    
     .stWarning {
         background-color: #fff8e6 !important; /* keknya ini */
         border-left: 5px solid #ffcc00 !important;
@@ -1861,6 +1875,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
