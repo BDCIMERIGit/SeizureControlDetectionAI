@@ -1201,18 +1201,34 @@ st.markdown("""
     /* ====== BUTTON STYLE ======
        Note: We style primary Streamlit buttons to appear navy for top nav and prediction
     */
+    # div.stButton > button {
+    #     background-color: #001f3f !important; /* navy */
+    #     color: #ffffff !important;             /* white text before hover */
+    #     border: none !important;
+    #     border-radius: 6px !important;
+    #     padding: 0.5em 1em !important;
+    #     font-weight: 600 !important;
+    #     transition: all 0.2s ease !important;
+    # }
+
     div.stButton > button {
-        background-color: #001f3f !important; /* navy */
-        color: #ffffff !important;             /* white text before hover */
-        border: none !important;
-        border-radius: 6px !important;
-        padding: 0.5em 1em !important;
+        background-color: #ffffff !important;  /* putih */
+        color: #001f3f !important;             /* teks biru navy */
+        border: 2px solid #001f3f !important;  /* biar tetap tegas */
+        border-radius: 8px !important;
+        padding: 0.6em 1.2em !important;
         font-weight: 600 !important;
-        transition: all 0.2s ease !important;
+        transition: all 0.3s ease !important;
     }
 
+    # div.stButton > button:hover {
+    #     background-color: #003366 !important;
+    #     transform: translateY(-2px);
+    # }
+    
     div.stButton > button:hover {
-        background-color: #003366 !important;
+        background-color: #001f3f !important;  /* balik ke navy saat hover */
+        color: #ffffff !important;             /* teks jadi putih */
         transform: translateY(-2px);
     }
 
@@ -1265,7 +1281,7 @@ st.markdown("""
         color: #001f3f !important;
     }
     .stWarning {
-        background-color: #fff8e6 !important;
+        background-color: #fff8e6 !important; /* keknya ini */
         border-left: 5px solid #ffcc00 !important;
         color: #7a6000 !important;
     }
@@ -1843,3 +1859,4 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
