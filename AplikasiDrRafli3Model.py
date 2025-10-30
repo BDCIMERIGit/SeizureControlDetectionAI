@@ -1277,7 +1277,8 @@ div[data-testid="stFormSubmitButton"] > button:hover {
 
     /* ====== STATUS BOXES ====== */
     .stSuccess {
-        background-color: #e6f7ff !important;
+        /* background-color: #e6f7ff !important; */
+        background-color: #d0e7ff !important;
         border-left: 5px solid #001f3f !important;
         color: #001f3f !important;
     }
@@ -1860,5 +1861,6 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
