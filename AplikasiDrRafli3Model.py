@@ -502,11 +502,11 @@
 # st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
 
 
-# ======================== V3 ============================ #
+# ======================== V2 ============================ #
 
 # =====================================================
 # 🧠 SeizureDetect.AI — Ensemble 3 Model + Majority Voting
-# Updated: Dashboard, Profile, Diagnosis flow + UI Refine v2
+# Updated: Dashboard, Profile, Diagnosis flow (modifikasi UI sesuai permintaan user)
 # =====================================================
 
 import streamlit as st
@@ -516,11 +516,13 @@ import pandas as pd
 import os
 from collections import Counter
 import matplotlib.pyplot as plt
+import re
 
 st.set_page_config(page_title="Halo Sahabat!", layout="centered")
 
 # =====================================================
 # 🎨 Custom CSS Styling (with fade-in animation)
+# Note: beberapa style disesuaikan global untuk memenuhi permintaan UI.
 # =====================================================
 st.markdown("""
     <style>
@@ -541,100 +543,111 @@ st.markdown("""
         animation: fadeIn 1.2s ease-in-out;
     }
 
-    /* ====== BUTTON STYLE ====== */
+    /* ====== BUTTON STYLE (global, disesuaikan agar tombol nav terlihat seragam navy) ====== */
     div.stButton > button {
-        background-color: #001f3f !important;
-        color: #ffffff !important;
-        border: none !important;
-        border-radius: 8px !important;
+        background-color: #001f3f !important; /* navy background */
+        color: #ffffff !important; /* tulisan putih sebelum hover */
+        border: 1px solid #ffffff !important; /* garis putih untuk sekat antar tombol */
+        border-radius: 0 !important; /* agar tampak menyatu */
         padding: 0.6em 1.2em !important;
         font-weight: 600 !important;
-        transition: all 0.3s ease !important;
+        transition: all 0.15s ease !important;
     }
+
+    /* Hover efek tetap, teks berubah sedikit saat hover */
     div.stButton > button:hover {
         background-color: #003366 !important;
         transform: translateY(-2px);
     }
 
-    /* Tombol "Masuk" tetap putih sebelum hover */
-    div.stButton > button:has(span:contains("Masuk")) {
+    /* ====== FORM FIELD ====== */
+    .stTextInput > div > div > input,
+    .stNumberInput > div > input,
+    .stSelectbox > div > div > select {
+        border-radius: 6px !important;
+        border: 1px solid #ccc !important;
+        padding: 8px !important;
         background-color: #ffffff !important;
-        color: #001f3f !important;
-        border: 2px solid #001f3f !important;
-    }
-    div.stButton > button:has(span:contains("Masuk")):hover {
-        background-color: #001f3f !important;
-        color: #ffffff !important;
+        color: #000000 !important;
     }
 
-    /* ====== LOGIN LABEL TEXT ====== */
+    /* Make labels darker (Login page requested black labels) */
     label {
         color: #000000 !important;
-        font-weight: 600 !important;
+        font-weight: 600;
     }
 
-    /* ====== SUCCESS BOX CUSTOM COLOR ====== */
-    .stSuccess {
-        background-color: #b3e5fc !important; /* Biru muda */
-        border-left: 5px solid #0277bd !important;
-        color: #001f3f !important;
-    }
-
-    /* ====== NAVBAR GROUP BUTTONS ====== */
-    .nav-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #001f3f;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-        overflow: hidden;
-    }
-    .nav-container button {
-        flex: 1;
-        background-color: #001f3f !important;
-        color: white !important;
-        border: none !important;
-        border-right: 2px solid #ffffff !important;
-        border-radius: 0 !important;
-        font-weight: 600 !important;
-        padding: 0.6em 0 !important;
-    }
-    .nav-container button:last-child {
-        border-right: none !important;
-    }
-    .nav-container button:hover {
-        background-color: #003366 !important;
-    }
-
-    /* ====== DIAGNOSIS LABELS ====== */
-    label:has(span:contains("Jenis Kelamin")),
-    label:has(span:contains("Usia saat ini (Kategorik)")),
-    label:has(span:contains("Usia terdiagnosis")),
-    label:has(span:contains("Jumlah OAE yang diminum")),
-    label:has(span:contains("Golongan Obat yang Dipakai")),
-    label:has(span:contains("Jenis Epilepsi")),
-    label:has(span:contains("Hasil Pemeriksaan EEG")),
-    label:has(span:contains("Hasil Pemeriksaan MRI")) {
+    /* ====== HEADER & TITLES ====== */
+    h1, h2, h3, h4 {
         color: #001f3f !important;
         font-weight: 700 !important;
     }
 
-    /* Tombol Prediksi */
-    div.stButton > button:has(span:contains("Prediksi")) {
-        background-color: #001f3f !important;
-        color: #ffffff !important;
-        border: none !important;
+    /* ====== SIDEBAR ====== */
+    section[data-testid="stSidebar"] {
+        background-color: #000000 !important;
     }
-    div.stButton > button:has(span:contains("Prediksi")):hover {
-        background-color: #003366 !important;
-        color: #ffffff !important;
+
+    /* ====== STATUS BOXES ====== */
+    .stSuccess {
+        background-color: #e6f7ff !important; /* light blue success box */
+        border-left: 5px solid #001f3f !important;
+        color: #001f3f !important;
     }
+    .stWarning {
+        background-color: #fff8e6 !important;
+        border-left: 5px solid #ffcc00 !important;
+        color: #7a6000 !important;
+    }
+    .stError {
+        background-color: #ffe6e6 !important;
+        border-left: 5px solid #cc0000 !important;
+        color: #660000 !important;
+    }
+
+    /* ====== DATAFRAME STYLE ====== */
+    .stDataFrame {
+        border-radius: 10px !important;
+        border: 1px solid #e0e0e0 !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* ====== CENTERING ====== */
+    .centered-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 85vh;
+        text-align: center;
+    }
+
+    /* khusus welcome-box setelah login */
+    .welcome-box {
+        background-color: #dff3ff;
+        border: 1px solid #bfe8ff;
+        padding: 12px;
+        border-radius: 8px;
+        color: #003366;
+        font-weight: 700;
+    }
+
+    /* style untuk label field diagnosis warna navy (kami akan menggunakan HTML label untuk elemen spesifik) */
+    .diagnosis-label {
+        color: #001f3f;
+        font-weight: 700;
+        margin-bottom: 4px;
+        display:block;
+    }
+
+    /* Jika butuh override tombol "Kembali" agar tetap terlihat berbeda, kita buat class kecil ini.
+       Namun Streamlit button tidak menerima kelas custom, sehingga kita gunakan tombol biasa. */
+    .small-link { font-weight:600; }
     </style>
 """, unsafe_allow_html=True)
 
 # =====================================================
-# MODEL & METADATA LOADER (unchanged)
+# 1️⃣ Load Model dan Metadata
 # =====================================================
 @st.cache_resource
 def load_models_and_metadata():
@@ -643,28 +656,40 @@ def load_models_and_metadata():
         "Decision Tree": "bestmodel_dt_drRafli.pkl",
         "Random Forest": "bestmodel_rf_drRafli.pkl"
     }
+
     metadata_files = {
         "XGBoost": "xgb_model_metadata.pkl",
         "Decision Tree": "dt_model_metadata.pkl",
         "Random Forest": "rf_model_metadata.pkl"
     }
+
     models, metadatas = {}, {}
     for name, path in model_files.items():
         if os.path.exists(path):
-            with open(path, "rb") as f:
-                models[name] = pickle.load(f)
+            try:
+                with open(path, "rb") as f:
+                    models[name] = pickle.load(f)
+            except Exception as e:
+                st.warning(f"Gagal memuat model {name}: {e}")
+
     for name, path in metadata_files.items():
         if os.path.exists(path):
-            with open(path, "rb") as f:
-                metadatas[name] = pickle.load(f)
+            try:
+                with open(path, "rb") as f:
+                    metadatas[name] = pickle.load(f)
+            except Exception as e:
+                st.warning(f"Gagal memuat metadata {name}: {e}")
+
     return models, metadatas
 
+
 models, metadatas = load_models_and_metadata()
+
 ref_meta = list(metadatas.values())[0] if len(metadatas) > 0 else None
 FEATURE_ORDER = ref_meta["FEATURE_ORDER"] if ref_meta else [
     'Jenis Kelamin',
     'Usia saat ini (Kategorik)',
-    'Usia terdiagnosis',
+    'Usia Terdiagnosis',
     'Jumlah OAE yang diminum',
     'Golongan Obat yang Dipakai',
     'Jenis Epilepsi',
@@ -675,51 +700,125 @@ FEATURE_ORDER = ref_meta["FEATURE_ORDER"] if ref_meta else [
 MANUAL_ENCODING = ref_meta["MANUAL_ENCODING"] if ref_meta else {}
 LABELS = {0: "Penanganan tidak terkontrol", 1: "Penanganan terkontrol"}
 
-
 # =====================================================
-# HELPER FUNCTIONS
+# 2️⃣ Helper Functions
 # =====================================================
 def normalize_manual_encoding(manual_encoding):
     norm = {}
     for col, mapping in manual_encoding.items():
         norm[col] = {str(k).strip(): v for k, v in mapping.items()}
     return norm
+
+
 MANUAL_ENCODING = normalize_manual_encoding(MANUAL_ENCODING)
+
+
+def try_float(x):
+    try:
+        return float(x)
+    except Exception:
+        return None
+
+
+def categorize_numeric_to_manual_key(value, manual_keys):
+    """
+    Mencoba mencocokkan angka ke salah satu kunci kategori di manual encoding.
+    Pendekatan heuristik:
+    - jika ada kunci yang terlihat seperti rentang 'a-b', cocokkan jika value dalam rentang
+    - jika kunci seperti '<x' atau '<=x' atau '>=x' atau '>x' tangani juga
+    - jika kunci adalah single number 'x' cocokkan jika sama
+    - jika tidak ada yang cocok, kembalikan str(value) (mungkin tidak ditemukan di map -> akan jadi 0)
+    """
+    if value is None:
+        return None
+    try:
+        v = float(value)
+    except:
+        return None
+
+    # Loop keys dan coba ekstrak angka
+    for k in manual_keys:
+        s = str(k).strip()
+        # Range pattern "a-b"
+        m_range = re.match(r'^\s*(\d+(?:\.\d+)?)\s*[-–]\s*(\d+(?:\.\d+)?)\s*$', s)
+        if m_range:
+            a = float(m_range.group(1))
+            b = float(m_range.group(2))
+            if a <= v <= b:
+                return s
+        # <= or >=
+        m_le = re.match(r'^(?:<=|≤)\s*(\d+(?:\.\d+)?)$', s)
+        m_ge = re.match(r'^(?:>=|≥)\s*(\d+(?:\.\d+)?)$', s)
+        m_lt = re.match(r'^<\s*(\d+(?:\.\d+)?)$', s)
+        m_gt = re.match(r'^>\s*(\d+(?:\.\d+)?)$', s)
+        if m_le:
+            if v <= float(m_le.group(1)):
+                return s
+        if m_ge:
+            if v >= float(m_ge.group(1)):
+                return s
+        if m_lt:
+            if v < float(m_lt.group(1)):
+                return s
+        if m_gt:
+            if v > float(m_gt.group(1)):
+                return s
+        # single integer
+        m_single = re.match(r'^\s*(\d+(?:\.\d+)?)\s*$', s)
+        if m_single:
+            if abs(v - float(m_single.group(1))) < 1e-6:
+                return s
+
+    # Jika tidak cocok, coba mencocokkan ke kunci yang mengandung angka dengan jarak terdekat
+    numeric_keys = []
+    for k in manual_keys:
+        nums = re.findall(r'\d+(?:\.\d+)?', str(k))
+        if nums:
+            numeric_keys.append((k, float(nums[0])))
+    if numeric_keys:
+        # ambil yang jaraknya paling kecil ke v
+        closest = min(numeric_keys, key=lambda t: abs(t[1] - v))
+        return closest[0]
+
+    return str(value)
+
 
 def encode_input(data_dict, metadata):
     encoded = {}
-    enc_map = metadata.get("MANUAL_ENCODING", {})
+    enc_map = metadata.get("MANUAL_ENCODING", {}) if metadata else MANUAL_ENCODING
     for col, val in data_dict.items():
-        if col in ["Usia saat ini (Kategorik)", "Usia terdiagnosis"]:
-            try:
-                val = float(val)
-                if val < 1:
-                    kategori = "Bayi"
-                elif val < 5:
-                    kategori = "Balita"
-                elif val < 12:
-                    kategori = "Anak"
-                elif val < 18:
-                    kategori = "Remaja"
-                else:
-                    kategori = "Dewasa"
-                encoded[col] = enc_map[col].get(kategori, 0)
-            except:
-                encoded[col] = 0
-        elif col in enc_map:
-            encoded[col] = enc_map[col].get(str(val).strip(), 0)
+        # special handling untuk dua kolom usia numeric yang diinginkan user
+        if col in ["Usia saat ini (Kategorik)", "Usia Terdiagnosis"]:
+            # jika val sudah berupa angka (float/int), kita konversi ke key kategori jika possible
+            manual_keys = enc_map.get(col, {}).keys() if enc_map.get(col) else []
+            if manual_keys:
+                # attempt to map numeric to manual key
+                cat_key = categorize_numeric_to_manual_key(val, manual_keys)
+                mapped = enc_map.get(col, {}).get(str(cat_key).strip())
+                encoded[col] = mapped if mapped is not None else 0
+            else:
+                # jika tidak ada manual encoding, gunakan angka langsung
+                try:
+                    encoded[col] = float(val)
+                except:
+                    encoded[col] = 0
         else:
-            try:
-                encoded[col] = float(val)
-            except:
-                encoded[col] = 0
+            if col in enc_map:
+                encoded[col] = enc_map[col].get(str(val).strip(), 0)
+            else:
+                # try numeric conversion
+                try:
+                    encoded[col] = float(val)
+                except Exception:
+                    encoded[col] = 0
     return encoded
 
 
 # =====================================================
-# SESSION INIT
+# 3️⃣ Session Initialization
 # =====================================================
 if "users" not in st.session_state:
+    # Default profile requested by user
     st.session_state["users"] = {
         "drrafli": {
             "name": "dr. Achmad Rafli, Sp.A(K)",
@@ -727,41 +826,56 @@ if "users" not in st.session_state:
             "email": "achmad.rafli@rs-cipto.go.id",
             "phone": "081234567890",
             "password": "123456",
-            "jadwal": "Sabtu 13:00-16:00, Minggu 08:00-10:30"
+            "jadwal": "Sabtu. 13:00 - 16:00. 16:00 - 19:00. Minggu. 08:00 - 10:30"
         }
     }
+
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
     st.session_state["username"] = None
+
 if "history" not in st.session_state:
+    # history will store diagnosis records
     st.session_state["history"] = []
+
 if "page" not in st.session_state:
     st.session_state["page"] = "home"
 
-def go_to(page): st.session_state["page"] = page
+
+def go_to(page):
+    st.session_state["page"] = page
 
 
 # =====================================================
-# NAVBAR COMPONENT
+# 4️⃣ Pages list
+# =====================================================
+PAGES = ["home", "auth_choice", "register", "login", "dashboard", "profile", "diagnosis", "history"]
+
+
+# =====================================================
+# Utility: top nav on dashboard/profile pages
+# - Buttons relabeled: Dashboard -> Home; kept semantics same
+# - Buttons appear visually uniform due to global button CSS above
 # =====================================================
 def dashboard_nav():
-    st.markdown('<div class="nav-container">', unsafe_allow_html=True)
     cols = st.columns(4)
     with cols[0]:
-        if st.button("Home"): go_to("dashboard")
+        if st.button("Home"):
+            go_to("dashboard")  # Home still takes to dashboard main view
     with cols[1]:
-        if st.button("Profile"): go_to("profile")
+        if st.button("Profile"):
+            go_to("profile")
     with cols[2]:
-        if st.button("Diagnosis"): go_to("diagnosis")
+        if st.button("Diagnosis"):
+            go_to("diagnosis")
     with cols[3]:
-        if st.button("Riwayat Diagnosis"): go_to("history")
-    st.markdown('</div>', unsafe_allow_html=True)
+        if st.button("Riwayat Diagnosis"):
+            go_to("history")
 
 
 # =====================================================
-# PAGE LOGIC
+# 5️⃣ UI Halaman
 # =====================================================
-# Home page
 if st.session_state["page"] == "home":
     st.markdown("""
         <div class="centered-container fade-in">
@@ -770,88 +884,276 @@ if st.session_state["page"] == "home":
             <p><i>Experimental App untuk prediksi penanganan kejang</i></p>
         </div>
     """, unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1,2,1])
-    with col2:
-        if st.button("Mulai Aplikasi"): go_to("auth_choice")
 
-# Login page
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("Mulai Aplikasi"):
+            go_to("auth_choice")
+
+    # NOTE: permintaan user: Hapus teks yang tetap berjalan ketika scroll.
+    # Maka saya tidak menampilkan bottom-caption/ footer di halaman awal.
+
+# =====================================================
+# Auth choice / register / login
+# =====================================================
+elif st.session_state["page"] == "auth_choice":
+    st.header("Apakah Anda sudah punya akun?")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Login"):
+            go_to("login")
+    with col2:
+        if st.button("Register"):
+            go_to("register")
+    if st.button("Kembali ke Beranda"):
+        go_to("home")
+
+elif st.session_state["page"] == "register":
+    st.header("Registrasi Akun Baru")
+    with st.form("register_form"):
+        name = st.text_input("Nama Lengkap")
+        instansi = st.text_input("Instansi / Rumah Sakit")
+        email = st.text_input("Email")
+        phone = st.text_input("Nomor Telepon")
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        jadwal = st.text_input("Jadwal Praktek (opsional)")
+        submitted = st.form_submit_button("Daftar")
+
+    if submitted:
+        if username in st.session_state["users"]:
+            st.error("Username sudah digunakan.")
+        else:
+            st.session_state["users"][username] = {
+                "name": name,
+                "instansi": instansi,
+                "email": email,
+                "phone": phone,
+                "password": password,
+                "jadwal": jadwal
+            }
+            st.success("Registrasi berhasil! Silakan login.")
+            go_to("login")
+    if st.button("Kembali"):
+        go_to("auth_choice")
+
 elif st.session_state["page"] == "login":
     st.header("Login")
+
+    # NOTE: user meminta label "Username" dan "Password" menjadi hitam.
+    # Kita sudah membuat CSS global untuk label -> men-set hitam.
     with st.form("login_form"):
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
+        # Tombol "Masuk" teks putih sebelum hover sesuai CSS global tombol
         submitted = st.form_submit_button("Masuk")
+
     if submitted:
         user = st.session_state["users"].get(username)
         if user and user["password"] == password:
             st.session_state["logged_in"] = True
             st.session_state["username"] = username
-            st.success(f"Selamat datang, {user['name']}!")
+            # Menampilkan kotak selamat datang dengan warna biru muda sesuai permintaan
+            st.markdown(f'<div class="welcome-box">Selamat datang, {user["name"]}!</div>', unsafe_allow_html=True)
             go_to("dashboard")
         else:
             st.error("Username atau password salah.")
-    if st.button("Kembali"): go_to("auth_choice")
+    if st.button("Kembali"):
+        go_to("auth_choice")
 
+
+# =====================================================
 # Dashboard
+# =====================================================
 elif st.session_state["page"] == "dashboard":
-    user = st.session_state["users"].get(st.session_state["username"], {})
-    st.title("Seizure Control Detection App")
-    dashboard_nav()
-    st.markdown("---")
-    st.subheader("Ringkasan Profil Dokter")
-    col1, col2 = st.columns([2,3])
-    with col1:
-        st.write("**Nama:**", user.get("name","-"))
-        st.write("**Instansi:**", user.get("instansi","-"))
-        st.write("**Jadwal Praktek:**", user.get("jadwal","-"))
-    with col2:
-        st.write("**Ringkasan Riwayat Diagnosis Terakhir**")
-        if len(st.session_state["history"]) == 0:
-            st.info("Belum ada riwayat diagnosis.")
-        else:
-            st.dataframe(pd.DataFrame(st.session_state["history"]).tail(5))
-    st.markdown("---")
-    months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt']
-    counts = [3,5,7,10,5,15,18,25,4,11]
-    fig, ax = plt.subplots(figsize=(8,3))
-    ax.plot(months, counts, marker='o')
-    ax.set_title('Jumlah pasien per bulan')
-    ax.set_ylabel('Jumlah pasien')
-    ax.grid(axis='y', alpha=0.3)
-    st.pyplot(fig)
-    st.markdown("---")
-    if st.button("Log Out"):
-        st.session_state["logged_in"] = False
-        st.session_state["username"] = None
+    if not st.session_state["logged_in"]:
+        st.warning("Silakan login terlebih dahulu.")
         go_to("login")
-
-# Diagnosis
-elif st.session_state["page"] == "diagnosis":
-    st.title("Diagnosis - Masukkan Data Pasien")
-    dashboard_nav()
-    st.sidebar.header("🔧 Model & Metadata")
-    st.sidebar.write(f"Model terdeteksi: {len(models)} / 3")
-    with st.form("input_form"):
-        input_data = {}
-        for key in FEATURE_ORDER:
-            if key in ["Usia saat ini (Kategorik)", "Usia terdiagnosis"]:
-                input_data[key] = st.number_input(key, min_value=0, max_value=120, step=1)
-            elif key in MANUAL_ENCODING:
-                input_data[key] = st.selectbox(key, list(MANUAL_ENCODING[key].keys()))
-            else:
-                input_data[key] = st.text_input(f"{key}")
-        submitted = st.form_submit_button("Prediksi")
-    if submitted:
-        encoded = encode_input(input_data, ref_meta)
-        X_input = pd.DataFrame([[encoded.get(c,0) for c in FEATURE_ORDER]], columns=FEATURE_ORDER)
-        preds = {}
-        for name, model in models.items():
-            preds[name] = int(model.predict(X_input)[0])
-            st.write(f"🔹 **{name}:** {LABELS[preds[name]]}")
-        vote_result = Counter(preds.values()).most_common(1)[0][0]
+    else:
+        user = st.session_state["users"].get(st.session_state["username"], {})
+        # Judul diubah sesuai permintaan
+        st.title("Seizure Control Detection App")
+        dashboard_nav()
         st.markdown("---")
-        st.subheader("🗳️ Hasil Majority Voting:")
-        st.success(LABELS[vote_result])
-        record = {**input_data, **{f"{k}_pred": LABELS[v] for k,v in preds.items()}, "Final Prediction": LABELS[vote_result]}
-        st.session_state["history"].append(record)
-    if st.button("Kembali ke Halaman Utama"): go_to("dashboard")
+
+        # Profile summary
+        st.subheader("Ringkasan Profil Dokter")
+        col1, col2 = st.columns([2, 3])
+        with col1:
+            st.write("**Nama:**", user.get("name", "-"))
+            st.write("**Instansi:**", user.get("instansi", "-"))
+            st.write("**Jadwal Praktek:**", user.get("jadwal", "-"))
+        with col2:
+            # Diagnosis history summary (table)
+            st.write("**Ringkasan Riwayat Diagnosis Terakhir**")
+            if len(st.session_state["history"]) == 0:
+                st.info("Belum ada riwayat diagnosis.")
+            else:
+                # show recent 5
+                df_recent = pd.DataFrame(st.session_state["history"]).tail(5)
+                st.dataframe(df_recent)
+
+        st.markdown("---")
+
+        # Trend chart (dummy data)
+        st.subheader("Trend Bulanan: Jumlah Pasien yang Didiagnosis")
+        months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt']
+        counts = [3,5,7,10,5,15,18,25,4,11]
+
+        fig, ax = plt.subplots(figsize=(8,3))
+        ax.plot(months, counts, marker='o')
+        ax.set_title('Jumlah pasien per bulan')
+        ax.set_ylabel('Jumlah pasien')
+        ax.set_xlabel('Bulan')
+        ax.grid(axis='y', alpha=0.3)
+        st.pyplot(fig)
+
+        st.markdown("---")
+        st.write("Gunakan menu di atas untuk mengakses Profile, Diagnosis, atau Riwayat Diagnosis.")
+
+        # Tombol Log Out di bagian bawah dashboard
+        st.markdown("---")
+        if st.button("Log Out"):
+            st.session_state["logged_in"] = False
+            st.session_state["username"] = None
+            st.success("Anda telah logout.")
+            go_to("login")
+
+
+# =====================================================
+# Profile page
+# =====================================================
+elif st.session_state["page"] == "profile":
+    if not st.session_state["logged_in"]:
+        st.warning("Silakan login terlebih dahulu.")
+        go_to("login")
+    else:
+        user = st.session_state["users"].get(st.session_state["username"], {})
+        st.title("Profile")
+        dashboard_nav()
+        st.markdown("---")
+        st.write("**Nama:**", user.get('name','-'))
+        st.write("**Instansi:**", user.get('instansi','-'))
+        st.write("**Jadwal Praktek:**", user.get('jadwal','-'))
+        st.write("**Email:**", user.get('email','-'))
+        st.write("**No HP:**", user.get('phone','-'))
+        st.markdown("---")
+        if st.button("Kembali ke Halaman Utama"):
+            go_to("dashboard")
+
+
+# =====================================================
+# Diagnosis (form) - reuse form logic
+# Modifikasi:
+# - Beberapa label ditampilkan manual dengan warna navy (diagnosis-label)
+# - Usia saat ini (Kategorik) & Usia Terdiagnosis jadi number_input, lalu di-map ke kategori
+# =====================================================
+elif st.session_state["page"] == "diagnosis":
+    if not st.session_state["logged_in"]:
+        st.warning("Silakan login terlebih dahulu.")
+        go_to("login")
+    else:
+        st.title("Diagnosis - Masukkan Data Pasien")
+        dashboard_nav()
+        st.sidebar.header("🔧 Model & Metadata")
+        st.sidebar.write(f"Model terdeteksi: {len(models)} / 3")
+
+        with st.form("input_form"):
+            input_data = {}
+            # We'll display custom labels for requested fields with navy color.
+            navy_fields = [
+                "Jenis Kelamin",
+                "Usia saat ini (Kategorik)",
+                "Usia Terdiagnosis",
+                "Jumlah OAE yang diminum",
+                "Golongan Obat yang Dipakai",
+                "Jenis Epilepsi",
+                "Hasil Pemeriksaan EEG",
+                "Hasil Pemeriksaan MRI"
+            ]
+
+            for key in FEATURE_ORDER:
+                # If key is one of the specified fields, show a custom label (navy)
+                if key in navy_fields:
+                    st.markdown(f'<label class="diagnosis-label">{key}</label>', unsafe_allow_html=True)
+
+                # special: for usia fields -> use number_input
+                if key in ["Usia saat ini (Kategorik)", "Usia Terdiagnosis"]:
+                    # default min=0 max=120
+                    num = st.number_input("", min_value=0.0, max_value=150.0, value=0.0, step=1.0)
+                    input_data[key] = num
+                else:
+                    # If the column has manual encoding mapping, present selectbox with choices
+                    if key in MANUAL_ENCODING:
+                        choices = list(MANUAL_ENCODING[key].keys())
+                        # put blank first for safety if desired
+                        input_data[key] = st.selectbox("", choices)
+                    else:
+                        input_data[key] = st.text_input("", key=f"free_{key}")
+
+            # Tombol Prediksi - teks putih sebelum hover (sudah diatur di CSS global)
+            submitted = st.form_submit_button("Prediksi")
+
+        if submitted:
+            if len(models) == 0 or ref_meta is None:
+                st.error("Tidak ada model atau metadata ditemukan.")
+            else:
+                encoded = encode_input(input_data, ref_meta)
+                X_input = pd.DataFrame([[encoded.get(c, 0) for c in FEATURE_ORDER]], columns=FEATURE_ORDER)
+
+                st.subheader("📊 Hasil Prediksi Tiap Model")
+                preds = {}
+                for name, model in models.items():
+                    try:
+                        pred = int(model.predict(X_input)[0])
+                        preds[name] = pred
+                        st.write(f"🔹 **{name}:** {LABELS[pred]}")
+                    except Exception as e:
+                        st.warning(f"Gagal prediksi dengan {name}: {e}")
+
+                if preds:
+                    votes = list(preds.values())
+                    vote_result = Counter(votes).most_common(1)[0][0]
+                    st.markdown("---")
+                    st.subheader("🗳️ Hasil Majority Voting:")
+                    st.success(LABELS[vote_result])
+                    st.markdown("---")
+
+                    # Simpan ke history (tambahkan timestamp sederhana)
+                    record = {
+                        **input_data,
+                        **{f"{k}_pred": LABELS[v] for k, v in preds.items()},
+                        "Final Prediction": LABELS[vote_result]
+                    }
+                    st.session_state["history"].append(record)
+
+        if st.button("Kembali ke Halaman Utama"):
+            go_to("dashboard")
+
+
+# =====================================================
+# Riwayat Diagnosis (history)
+# =====================================================
+elif st.session_state["page"] == "history":
+    if not st.session_state["logged_in"]:
+        st.warning("Silakan login terlebih dahulu.")
+        go_to("login")
+    else:
+        st.title("Riwayat Diagnosis")
+        dashboard_nav()
+        st.markdown("---")
+        if len(st.session_state["history"]) == 0:
+            st.info("Belum ada riwayat.")
+        else:
+            df_hist = pd.DataFrame(st.session_state["history"])
+            st.dataframe(df_hist)
+        if st.button("Kembali ke Halaman Utama"):
+            go_to("dashboard")
+
+
+# Footer caption
+st.markdown("---")
+# NOTE: user meminta menghapus tulisan footer yang mengikuti scroll pada halaman awal.
+# Oleh karena itu saya tidak menampilkan caption/footer yang bersifat fixed.
+# Jika Anda ingin menambahkan kembali caption non-fixed, Anda bisa mengaktifkan ulang baris berikut:
+# st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
