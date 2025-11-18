@@ -1889,7 +1889,7 @@ GOLONGAN_REVERSE_MAP = {v: k for k, v in GOLONGAN_DISPLAY_MAP.items()}
 #         if st.button("Kembali ke Halaman Utama"):
 #             go_to("dashboard")
 
-elif st.session_state["page"] == "diagnosis":
+if st.session_state["page"] == "diagnosis":
     if not st.session_state["logged_in"]:
         st.warning("Silakan login terlebih dahulu.")
         go_to("login")
@@ -2032,6 +2032,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
