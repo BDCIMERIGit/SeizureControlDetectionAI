@@ -1796,7 +1796,7 @@ elif st.session_state["page"] == "diagnosis":
                     # assume ages are integers >= 0
                     val = st.number_input(f"", min_value=0, step=1, key=f"field_{key}")
                     input_data[key] = val
-                else:
+                #else:
                     # if key is in MANUAL_ENCODING, we present selectbox using mapping keys
                     # if key in MANUAL_ENCODING:
                     #     choices = list(MANUAL_ENCODING[key].keys())
@@ -1804,7 +1804,7 @@ elif st.session_state["page"] == "diagnosis":
                     #     val = st.selectbox("", choices, key=f"field_{key}")
                     #     input_data[key] = val
 
-                    if key == "Golongan Obat yang Dipakai":
+                    elif key == "Golongan Obat yang Dipakai":
                         st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
     
                         choices = [GOLONGAN_DISPLAY_MAP[c] for c in MANUAL_ENCODING[key].keys()]  # tampilkan versi panjang
@@ -1813,7 +1813,7 @@ elif st.session_state["page"] == "diagnosis":
     
                         # simpan value asli sesuai metadata
                         input_data[key] = GOLONGAN_REVERSE_MAP[selected_display]
-                    else:
+                    elif:
                         choices = list(MANUAL_ENCODING[key].keys())
                         st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
                         val = st.selectbox("", choices, key=f"field_{key}")
@@ -1912,6 +1912,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
