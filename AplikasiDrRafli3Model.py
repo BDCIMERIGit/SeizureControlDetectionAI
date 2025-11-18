@@ -1664,6 +1664,7 @@ elif st.session_state["page"] == "login":
 # =====================================================
 # Dashboard
 # =====================================================
+
 elif st.session_state["page"] == "dashboard":
     if not st.session_state["logged_in"]:
         st.warning("Silakan login terlebih dahulu.")
@@ -1761,6 +1762,19 @@ elif st.session_state["page"] == "profile":
 # =====================================================
 # Diagnosis (form) - reuse form logic but with customization
 # =====================================================
+
+# === Custom Display Text for Golongan Obat ===
+GOLONGAN_DISPLAY_MAP = {
+    "Golongan 1": "Golongan 1: Asam valproat, Levetirasetam",
+    "Golongan 2": "Golongan 2: Karbamazepin, Okskarbazepin",
+    "Golongan 3": "Golongan 3: Fenitoin, Fenobarbital",
+    "Golongan 4": "Golongan 4: Topiramat, Lamotrigin",
+    "Golongan 5": "Golongan 5: Lacosamide, Clobazam"
+}
+
+# Reverse map untuk mengembalikan pilihan user ke key asli
+GOLONGAN_REVERSE_MAP = {v: k for k, v in GOLONGAN_DISPLAY_MAP.items()}
+
 elif st.session_state["page"] == "diagnosis":
     if not st.session_state["logged_in"]:
         st.warning("Silakan login terlebih dahulu.")
@@ -1784,11 +1798,27 @@ elif st.session_state["page"] == "diagnosis":
                     input_data[key] = val
                 else:
                     # if key is in MANUAL_ENCODING, we present selectbox using mapping keys
-                    if key in MANUAL_ENCODING:
+                    # if key in MANUAL_ENCODING:
+                    #     choices = list(MANUAL_ENCODING[key].keys())
+                    #     st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
+                    #     val = st.selectbox("", choices, key=f"field_{key}")
+                    #     input_data[key] = val
+
+                    if key == "Golongan Obat yang Dipakai":
+                        st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
+    
+                        choices = [GOLONGAN_DISPLAY_MAP[c] for c in MANUAL_ENCODING[key].keys()]  # tampilkan versi panjang
+    
+                        selected_display = st.selectbox("", choices, key=f"field_{key}")
+    
+                        # simpan value asli sesuai metadata
+                        input_data[key] = GOLONGAN_REVERSE_MAP[selected_display]
+                    else:
                         choices = list(MANUAL_ENCODING[key].keys())
                         st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
                         val = st.selectbox("", choices, key=f"field_{key}")
                         input_data[key] = val
+
                     else:
                         # fallback text input (render navy label if requested fields)
                         label_style = 'navy-label' if key in ['Jenis Kelamin','Jumlah OAE yang diminum','Golongan Obat yang Dipakai','Jenis Epilepsi','Hasil Pemeriksaan EEG','Hasil Pemeriksaan MRI'] else ''
@@ -1882,6 +1912,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
