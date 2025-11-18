@@ -1775,6 +1775,120 @@ GOLONGAN_DISPLAY_MAP = {
 # Reverse map untuk mengembalikan pilihan user ke key asli
 GOLONGAN_REVERSE_MAP = {v: k for k, v in GOLONGAN_DISPLAY_MAP.items()}
 
+# elif st.session_state["page"] == "diagnosis":
+#     if not st.session_state["logged_in"]:
+#         st.warning("Silakan login terlebih dahulu.")
+#         go_to("login")
+#     else:
+#         st.title("Diagnosis - Masukkan Data Pasien")
+#         # top nav
+#         dashboard_nav()
+#         st.sidebar.header("🔧 Model & Metadata")
+#         st.sidebar.write(f"Model terdeteksi: {len(models)} / 3")
+
+#         with st.form("input_form"):
+#             input_data = {}
+#             # Build inputs: show navy-label for specific fields requested
+#             for key in FEATURE_ORDER:
+#                 # For the two usia fields, we present number inputs (and later map to categories)
+#                 if key in ["Usia saat ini (Kategorik)", "Usia Terdiagnosis"]:
+#                     st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
+#                     # assume ages are integers >= 0
+#                     val = st.number_input(f"", min_value=0, step=1, key=f"field_{key}")
+#                     input_data[key] = val
+#                 #else:
+#                     # if key is in MANUAL_ENCODING, we present selectbox using mapping keys
+#                     # if key in MANUAL_ENCODING:
+#                     #     choices = list(MANUAL_ENCODING[key].keys())
+#                     #     st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
+#                     #     val = st.selectbox("", choices, key=f"field_{key}")
+#                     #     input_data[key] = val
+
+#                     elif key == "Golongan Obat yang Dipakai":
+#                         st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
+    
+#                         choices = [GOLONGAN_DISPLAY_MAP[c] for c in MANUAL_ENCODING[key].keys()]  # tampilkan versi panjang
+    
+#                         selected_display = st.selectbox("", choices, key=f"field_{key}")
+    
+#                         # simpan value asli sesuai metadata
+#                         input_data[key] = GOLONGAN_REVERSE_MAP[selected_display]
+#                     elif:
+#                         choices = list(MANUAL_ENCODING[key].keys())
+#                         st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
+#                         val = st.selectbox("", choices, key=f"field_{key}")
+#                         input_data[key] = val
+
+#                     else:
+#                         # fallback text input (render navy label if requested fields)
+#                         label_style = 'navy-label' if key in ['Jenis Kelamin','Jumlah OAE yang diminum','Golongan Obat yang Dipakai','Jenis Epilepsi','Hasil Pemeriksaan EEG','Hasil Pemeriksaan MRI'] else ''
+#                         if label_style:
+#                             st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
+#                         else:
+#                             st.markdown(f'<label>{key}</label>', unsafe_allow_html=True)
+#                         val = st.text_input("", key=f"field_{key}")
+#                         input_data[key] = val
+
+#             # Prediction button text set to "Prediksi" per request
+#             submitted = st.form_submit_button("Prediksi")
+
+#         # Post-process numeric age fields to map into categorical labels (if metadata mapping exists)
+#         # Use heuristics to pick matching category string from MANUAL_ENCODING (if available)
+#         if submitted:
+#             if len(models) == 0 or ref_meta is None:
+#                 st.error("Tidak ada model atau metadata ditemukan.")
+#             else:
+#                 # Build a copy of input_data_for_encoding where numeric age fields are translated into category keys if possible
+#                 input_for_encoding = input_data.copy()
+#                 for age_key in ["Usia saat ini (Kategorik)", "Usia Terdiagnosis"]:
+#                     if age_key in input_for_encoding:
+#                         numval = input_for_encoding[age_key]
+#                         # try to map numeric to existing MANUAL_ENCODING categories (if available)
+#                         if age_key in MANUAL_ENCODING and isinstance(numval, (int, float)):
+#                             mapped_cat = try_map_numeric_to_category(age_key, numval, MANUAL_ENCODING[age_key])
+#                             if mapped_cat is not None:
+#                                 input_for_encoding[age_key] = mapped_cat
+#                             else:
+#                                 # If can't map, fallback to nearest: choose first category (graceful fallback)
+#                                 # (Alternatively you could create an explicit rule mapping)
+#                                 input_for_encoding[age_key] = str(int(numval))
+#                         else:
+#                             input_for_encoding[age_key] = str(int(numval))
+
+#                 encoded = encode_input(input_for_encoding, ref_meta)
+#                 X_input = pd.DataFrame([[encoded.get(c, 0) for c in FEATURE_ORDER]], columns=FEATURE_ORDER)
+
+#                 st.subheader("📊 Hasil Prediksi Tiap Model")
+#                 preds = {}
+#                 for name, model in models.items():
+#                     try:
+#                         # ensure model predict works with our X_input
+#                         pred = int(model.predict(X_input)[0])
+#                         preds[name] = pred
+#                         st.write(f"🔹 **{name}:** {LABELS[pred]}")
+#                     except Exception as e:
+#                         st.warning(f"Gagal prediksi dengan {name}: {e}")
+
+#                 if preds:
+#                     votes = list(preds.values())
+#                     vote_result = Counter(votes).most_common(1)[0][0]
+#                     st.markdown("---")
+#                     st.subheader("🗳️ Hasil Majority Voting:")
+#                     st.success(LABELS[vote_result])
+#                     st.markdown("---")
+
+#                     # Simpan ke history (tambahkan timestamp sederhana)
+#                     record = {
+#                         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+#                         **input_data,
+#                         **{f"{k}_pred": LABELS[v] for k, v in preds.items()},
+#                         "Final Prediction": LABELS[vote_result]
+#                     }
+#                     st.session_state["history"].append(record)
+
+#         if st.button("Kembali ke Halaman Utama"):
+#             go_to("dashboard")
+
 elif st.session_state["page"] == "diagnosis":
     if not st.session_state["logged_in"]:
         st.warning("Silakan login terlebih dahulu.")
@@ -1790,44 +1904,50 @@ elif st.session_state["page"] == "diagnosis":
             input_data = {}
             # Build inputs: show navy-label for specific fields requested
             for key in FEATURE_ORDER:
-                # For the two usia fields, we present number inputs (and later map to categories)
+                # 1) For the two usia fields, present number inputs (later map to categories)
                 if key in ["Usia saat ini (Kategorik)", "Usia Terdiagnosis"]:
                     st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
                     # assume ages are integers >= 0
-                    val = st.number_input(f"", min_value=0, step=1, key=f"field_{key}")
+                    val = st.number_input("", min_value=0, step=1, key=f"field_{key}")
                     input_data[key] = val
-                #else:
-                    # if key is in MANUAL_ENCODING, we present selectbox using mapping keys
-                    # if key in MANUAL_ENCODING:
-                    #     choices = list(MANUAL_ENCODING[key].keys())
-                    #     st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
-                    #     val = st.selectbox("", choices, key=f"field_{key}")
-                    #     input_data[key] = val
 
-                    elif key == "Golongan Obat yang Dipakai":
-                        st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
-    
-                        choices = [GOLONGAN_DISPLAY_MAP[c] for c in MANUAL_ENCODING[key].keys()]  # tampilkan versi panjang
-    
-                        selected_display = st.selectbox("", choices, key=f"field_{key}")
-    
-                        # simpan value asli sesuai metadata
-                        input_data[key] = GOLONGAN_REVERSE_MAP[selected_display]
-                    elif:
-                        choices = list(MANUAL_ENCODING[key].keys())
-                        st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
-                        val = st.selectbox("", choices, key=f"field_{key}")
-                        input_data[key] = val
+                # 2) Specific: "Golongan Obat yang Dipakai" — show verbose labels but save original key
+                elif key == "Golongan Obat yang Dipakai":
+                    st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
 
+                    # get raw keys from MANUAL_ENCODING if available, otherwise fallback to GOLONGAN_DISPLAY_MAP keys
+                    if key in MANUAL_ENCODING:
+                        raw_keys = list(MANUAL_ENCODING[key].keys())
                     else:
-                        # fallback text input (render navy label if requested fields)
-                        label_style = 'navy-label' if key in ['Jenis Kelamin','Jumlah OAE yang diminum','Golongan Obat yang Dipakai','Jenis Epilepsi','Hasil Pemeriksaan EEG','Hasil Pemeriksaan MRI'] else ''
-                        if label_style:
-                            st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
-                        else:
-                            st.markdown(f'<label>{key}</label>', unsafe_allow_html=True)
-                        val = st.text_input("", key=f"field_{key}")
-                        input_data[key] = val
+                        raw_keys = list(GOLONGAN_DISPLAY_MAP.keys())
+
+                    # create choices to display (use display map if available, otherwise use the raw key itself)
+                    choices = [GOLONGAN_DISPLAY_MAP.get(k, k) for k in raw_keys]
+
+                    selected_display = st.selectbox("", choices, key=f"field_{key}")
+
+                    # map back to original metadata key (e.g. "Golongan 1"). fallback to first raw_key.
+                    input_data[key] = GOLONGAN_REVERSE_MAP.get(selected_display, raw_keys[0])
+
+                # 3) If key exists in MANUAL_ENCODING → normal selectbox with those keys
+                elif key in MANUAL_ENCODING:
+                    st.markdown(f'<label class="navy-label">{key}</label>', unsafe_allow_html=True)
+                    choices = list(MANUAL_ENCODING[key].keys())
+                    val = st.selectbox("", choices, key=f"field_{key}")
+                    input_data[key] = val
+
+                # 4) Fallback: text input
+                else:
+                    label_style = 'navy-label' if key in [
+                        'Jenis Kelamin','Jumlah OAE yang diminum','Golongan Obat yang Dipakai',
+                        'Jenis Epilepsi','Hasil Pemeriksaan EEG','Hasil Pemeriksaan MRI'
+                    ] else ''
+                    if label_style:
+                        st.markdown(f'<label class="{label_style}">{key}</label>', unsafe_allow_html=True)
+                    else:
+                        st.markdown(f'<label>{key}</label>', unsafe_allow_html=True)
+                    val = st.text_input("", key=f"field_{key}")
+                    input_data[key] = val
 
             # Prediction button text set to "Prediksi" per request
             submitted = st.form_submit_button("Prediksi")
@@ -1850,7 +1970,6 @@ elif st.session_state["page"] == "diagnosis":
                                 input_for_encoding[age_key] = mapped_cat
                             else:
                                 # If can't map, fallback to nearest: choose first category (graceful fallback)
-                                # (Alternatively you could create an explicit rule mapping)
                                 input_for_encoding[age_key] = str(int(numval))
                         else:
                             input_for_encoding[age_key] = str(int(numval))
@@ -1889,6 +2008,7 @@ elif st.session_state["page"] == "diagnosis":
         if st.button("Kembali ke Halaman Utama"):
             go_to("dashboard")
 
+
 # =====================================================
 # Riwayat Diagnosis (history)
 # =====================================================
@@ -1912,6 +2032,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
