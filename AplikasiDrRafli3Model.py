@@ -1765,11 +1765,11 @@ elif st.session_state["page"] == "profile":
 
 # === Custom Display Text for Golongan Obat ===
 GOLONGAN_DISPLAY_MAP = {
-    "Golongan 1": "Golongan 1: Asam valproat, Levetirasetam",
-    "Golongan 2": "Golongan 2: Karbamazepin, Okskarbazepin",
-    "Golongan 3": "Golongan 3: Fenitoin, Fenobarbital",
-    "Golongan 4": "Golongan 4: Topiramat, Lamotrigin",
-    "Golongan 5": "Golongan 5: Lacosamide, Clobazam"
+    "Golongan 1": "Golongan 1: Asam valproat + Levetirasetam",
+    "Golongan 2": "Golongan 2: Asam valproat + Topiramat",
+    "Golongan 3": "Golongan 3: Asam valproat + Karbamazepin/Okskarbazepin ",
+    "Golongan 4": "Golongan 4: Asam valproat + Levetirasetam + Topiramat",
+    "Golongan 5": "Golongan 5: Asam valproat + Levetirasetam + Klobazam"
 }
 
 # Reverse map untuk mengembalikan pilihan user ke key asli
@@ -2032,6 +2032,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
