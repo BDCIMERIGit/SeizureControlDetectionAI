@@ -1977,7 +1977,7 @@ if st.session_state["page"] == "diagnosis":
                 encoded = encode_input(input_for_encoding, ref_meta)
                 X_input = pd.DataFrame([[encoded.get(c, 0) for c in FEATURE_ORDER]], columns=FEATURE_ORDER)
 
-                st.subheader("📊 Hasil Prediksi Tiap Model")
+                st.subheader("📊 Hasil Prediksi Tiap Model (Data Testing)")
                 preds = {}
                 for name, model in models.items():
                     try:
@@ -1992,7 +1992,7 @@ if st.session_state["page"] == "diagnosis":
                     votes = list(preds.values())
                     vote_result = Counter(votes).most_common(1)[0][0]
                     st.markdown("---")
-                    st.subheader("🗳️ Hasil Majority Voting:")
+                    st.subheader("🗳️ Hasil Majority Voting (Data Testing):")
                     st.success(LABELS[vote_result])
                     st.markdown("---")
 
@@ -2032,6 +2032,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
