@@ -41,6 +41,8 @@ st.set_page_config(page_title="Halo Sahabat!", layout="centered")
 #</div>
 #""", unsafe_allow_html=True)
 
+import base64
+
 def img_to_base64(path):
     with open(path, "rb") as f:
         return base64.b64encode(f.read()).decode()
@@ -928,6 +930,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
