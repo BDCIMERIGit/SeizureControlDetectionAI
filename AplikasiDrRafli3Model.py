@@ -929,7 +929,8 @@ elif st.session_state["page"] == "history":
 # Footer caption (tampilkan hanya jika bukan di halaman 'home')
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
-    st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+    st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | machine learning for management children with intractable epilepsy (XGB + DT + RF)")
+
 
 
 
