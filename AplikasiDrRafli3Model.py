@@ -19,11 +19,11 @@ st.set_page_config(page_title="Halo Sahabat!", layout="centered")
 # =====================================================
 # 🖼️ Header Logo Section
 # =====================================================
-col1, col2 = st.columns([4,4])
+col1, col2 = st.columns([1,1])
 with col1:
-    st.image("logo/logo-ui-fk-imeri.png", width=110)
+    st.image("logo/logo-ui-fk-imeri.png", width=80)
 with col2:
-    st.image("logo/logo-RSCM.png", width=110)
+    st.image("logo/logo-RSCM.png", width=80)
 
 
 #st.markdown("""
@@ -891,6 +891,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
