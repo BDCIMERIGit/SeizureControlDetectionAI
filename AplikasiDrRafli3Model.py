@@ -236,14 +236,6 @@ div[data-testid="stFormSubmitButton"] > button:hover {
         color: #001f3f;
     }
 
-        /* ====== HEADER LOGO ====== */
-    .logo-header {
-        display: flex;
-        align-items: center;
-        gap: 6px;              /* 🔥 jarak antar logo */
-        padding: 8px 20px;
-    }
-
 
     </style>
 """, unsafe_allow_html=True)
@@ -899,6 +891,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
