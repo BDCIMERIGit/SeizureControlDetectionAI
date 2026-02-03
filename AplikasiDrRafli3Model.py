@@ -19,13 +19,20 @@ st.set_page_config(page_title="Halo Sahabat!", layout="centered")
 # =====================================================
 # 🖼️ Header Logo Section
 # =====================================================
-col1, col2, col3 = st.columns([4, 4, 6])
+#col1, col2, col3 = st.columns([4, 4, 6])
+#
+#with col1:
+#    st.image("logo/logo-ui-fk-imeri.png", width=10)
+#
+# with col2:
+#    st.image("logo/logo-RSCM.png", width=10)
 
-with col1:
-    st.image("logo/logo-ui-fk-imeri.png", width=10)
-
-with col2:
-    st.image("logo/logo-RSCM.png", width=10)
+st.markdown("""
+<div class="logo-header">
+    <img src="logo/logo-ui-fk-imeri.png" height="45">
+    <img src="alogo/logo-RSCM.png" height="45">
+</div>
+""", unsafe_allow_html=True)
 
 # =====================================================
 # 🎨 Custom CSS Styling (with fade-in animation) + modifications
@@ -120,6 +127,16 @@ div[data-testid="stFormSubmitButton"] > button:hover {
         color: #001f3f !important;
         font-weight: 700 !important;
     }
+
+    /* ====== LOGO HEADER ======= */
+    .logo-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 6px;              /* 🔥 jarak logo DI SINI */
+    padding: 10px 20px;
+}
+
 
     /* ====== SIDEBAR ====== */
     section[data-testid="stSidebar"] {
@@ -883,6 +900,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
