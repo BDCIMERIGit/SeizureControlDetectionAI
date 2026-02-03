@@ -420,7 +420,7 @@ if st.session_state["page"] == "home":
     st.markdown("""
         <div class="centered-container fade-in">
             <h1>Halo Sahabat!</h1>
-            <h2>Selamat Datang di Aplikasi SeizureDetect.AI!</h2>
+            <h2>Selamat Datang di Aplikasi PediEpiAI!</h2>
             <p><i>Experimental App untuk prediksi penanganan kejang</i></p>
         </div>
     """, unsafe_allow_html=True)
@@ -872,6 +872,7 @@ elif st.session_state["page"] == "history":
 if st.session_state.get("page", "") != "home":
     st.markdown("---")
     st.caption("Developed with ❤️ by Dr. Rafli, AISeeyou, & BDC IMERI | Ensemble Epilepsy Prediction Model (XGB + DT + RF)")
+
 
 
 
